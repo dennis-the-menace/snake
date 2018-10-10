@@ -4,12 +4,14 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.support.constraint.solver.widgets.Rectangle;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
+    private Rectangle rect;
     private CharacterSprite snake;
 
     public GameView(Context context) {
@@ -27,7 +29,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        snake = new CharacterSprite();
+        snake = new CharacterSprite(rect);
         thread.setRunning(true);
         thread.start();
     }
@@ -47,7 +49,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     public void update() {
-
+        snake.update();
     }
 
     @Override
@@ -55,6 +57,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if(canvas!=null) {
             canvas.drawColor(Color.WHITE);
+            snake.draw(canvas);
         }
 
     }
