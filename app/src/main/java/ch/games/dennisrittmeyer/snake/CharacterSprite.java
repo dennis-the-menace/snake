@@ -13,8 +13,8 @@ public class CharacterSprite extends MyGestureListener {
     public CharacterSprite(Rectangle rect) {
         this.rect = rect;
         paint.setColor(Color.rgb(0,0,0));
-        x = 100;
-        y = 100;
+        x = 500;
+        y = 500;
     }
 
     public void draw(Canvas canvas) {
@@ -22,6 +22,14 @@ public class CharacterSprite extends MyGestureListener {
     }
 
     public void update() {
-        y = y + 50;
+        if(MyGestureListener.getDirection() == Direction.down) {
+            y = y + 50;
+        } else if(MyGestureListener.getDirection() == Direction.up) {
+            y = y - 50;
+        } else if(MyGestureListener.getDirection() == Direction.right) {
+            x = x + 50;
+        } else {
+            x = x - 50;
+        }
     }
 }

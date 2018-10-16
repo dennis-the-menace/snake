@@ -25,6 +25,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        Log.d(TAG, "onTouch: ");
         this.mDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
