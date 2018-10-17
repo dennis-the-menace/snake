@@ -5,11 +5,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.constraint.solver.widgets.Rectangle;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
-
-import static android.content.ContentValues.TAG;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
@@ -26,6 +23,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
         thread = new MainThread(getHolder(), this);
         setFocusable(true);
+        paint.setColor(Color.WHITE);
+
     }
 
     @Override
@@ -65,12 +64,23 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if(canvas!=null) {
             canvas.drawColor(Color.BLACK);
-            paint.setColor(Color.WHITE);
-            canvas.drawRect(50, 50, roundToFifty(canvas.getWidth()), roundToFifty(canvas.getHeight()), paint);
-            Log.d(TAG,canvas.getWidth() + "/ hei: " + canvas.getHeight());
-            snake.draw(canvas);
+            int x1 = calculateBorderSize(canvas.getWidth());
+            int y1 = calculateBorderSize(canvas.getHeight());
+            int x2 = canvas.getWidth() - x1;
+            int y2 = canvas.getHeight() - y1;
+            canvas.drawRect(x1, y1, x2, y2, paint);
+            snake.draw(canvas, x1, y1);
         }
 
+    }
+
+    private int calculateBorderSize(int canvasSize) {
+        if(canvasSize % 50 != 0) {
+           int borderSize = (canvasSize - roundToFifty(canvasSize)) / 2;
+           return borderSize;
+        } else {
+            return 0;
+        }
     }
 
     private int roundToFifty(int number) {
