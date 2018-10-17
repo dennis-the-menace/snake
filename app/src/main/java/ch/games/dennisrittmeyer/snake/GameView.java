@@ -5,18 +5,19 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.constraint.solver.widgets.Rectangle;
-import android.view.GestureDetector;
-import android.view.GestureDetector.SimpleOnGestureListener;
-import android.view.MotionEvent;
-import android.view.SurfaceView;
+import android.util.Log;
 import android.view.SurfaceHolder;
-import android.view.View;
+import android.view.SurfaceView;
+
+import static android.content.ContentValues.TAG;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     private MainThread thread;
     private Rectangle rect;
+    private Rectangle playGround;
     private CharacterSprite snake;
+    private Paint paint = new Paint();
 
     public GameView(Context context) {
         super(context);
@@ -63,10 +64,27 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     public void draw(Canvas canvas) {
         super.draw(canvas);
         if(canvas!=null) {
-            canvas.drawColor(Color.WHITE);
+            canvas.drawColor(Color.BLACK);
+            paint.setColor(Color.WHITE);
+            canvas.drawRect(50, 50, roundToFifty(canvas.getWidth()), roundToFifty(canvas.getHeight()), paint);
+            Log.d(TAG,canvas.getWidth() + "/ hei: " + canvas.getHeight());
             snake.draw(canvas);
         }
 
+    }
+
+    private int roundToFifty(int number) {
+        if(number % 50 != 0) {
+            int roundedToHundred = number / 100 * 100;
+            int diff = number - roundedToHundred;
+            if(diff > 50) {
+                return number - (diff - 50);
+            } else {
+                return number - diff;
+            }
+        } else {
+            return number;
+        }
     }
 
 }
