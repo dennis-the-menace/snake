@@ -12,13 +12,13 @@ public class CharacterSprite extends MyGestureListener {
 
     public CharacterSprite(Rectangle rect) {
         this.rect = rect;
-        paint.setColor(Color.rgb(0,0,0));
+        paint.setColor(Color.DKGRAY);
         x = 500;
         y = 500;
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawRect(x-50, y-50,x,y, paint);
+    public void draw(Canvas canvas, int widthBorder, int heightBorder) {
+        canvas.drawRect(x-50+widthBorder, y-50+heightBorder,x+widthBorder,y+heightBorder, paint);
     }
 
     public void update() {

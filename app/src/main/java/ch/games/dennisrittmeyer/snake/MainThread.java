@@ -35,7 +35,7 @@ public class MainThread extends Thread{
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
-                    sleep(1000);
+                    sleep(300);
                     this.gameView.update();
                     this.gameView.draw(canvas);
                 }
