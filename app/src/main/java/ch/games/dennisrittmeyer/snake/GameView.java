@@ -14,7 +14,14 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private Rectangle rect;
     private Rectangle playGround;
     private CharacterSprite snake;
+    private Food food;
     private Paint paint = new Paint();
+    private static int borderSizeLeftRight;
+    private static int borderSizeTopBottom;
+    private static int canvasWidth;
+    private static int canvasHeight;
+    private boolean isFoodEaten = false;
+    private boolean doDrawFood = false;
 
     public GameView(Context context) {
         super(context);
@@ -30,9 +37,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         snake = new CharacterSprite(rect);
+        food = new Food(rect);
         thread.setRunning(true);
         thread.start();
-
     }
 
     @Override
@@ -57,6 +64,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     public void update() {
         snake.update();
+        if(isFoodEaten) {
+            food.update();
+        }
     }
 
     @Override
@@ -64,12 +74,25 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super.draw(canvas);
         if(canvas!=null) {
             canvas.drawColor(Color.BLACK);
-            int x1 = calculateBorderSize(canvas.getWidth());
-            int y1 = calculateBorderSize(canvas.getHeight());
-            int x2 = canvas.getWidth() - x1;
-            int y2 = canvas.getHeight() - y1;
-            canvas.drawRect(x1, y1, x2, y2, paint);
-            snake.draw(canvas, x1, y1);
+            borderSizeLeftRight = calculateBorderSize(canvas.getWidth());
+            borderSizeTopBottom = calculateBorderSize(canvas.getHeight());
+            canvasWidth = canvas.getWidth() - borderSizeLeftRight;
+            canvasHeight = canvas.getHeight() - borderSizeTopBottom;
+            canvas.drawRect(borderSizeLeftRight, borderSizeTopBottom, canvasWidth, canvasHeight, paint);
+            if(snake.getX() == food.getX() && snake.getY() == food.getY()) {
+                System.out.println("consoleOutput: eat food");
+                snake.draw(canvas, borderSizeLeftRight, borderSizeTopBottom);
+                isFoodEaten = true;
+            } else {
+                if(doDrawFood) {
+                    food.draw(canvas);
+                } else {
+                    doDrawFood = true;
+                    food.update();
+                }
+                snake.draw(canvas, borderSizeLeftRight, borderSizeTopBottom);
+                isFoodEaten = false;
+            }
         }
 
     }
@@ -83,7 +106,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
-    private int roundToFifty(int number) {
+    public static int roundToFifty(int number) {
         if(number % 50 != 0) {
             int roundedToHundred = number / 100 * 100;
             int diff = number - roundedToHundred;
@@ -96,5 +119,24 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             return number;
         }
     }
+
+
+
+    public static int getCanvasWidth() {
+        return canvasWidth;
+    }
+
+    public static int getCanvasHeight() {
+        return canvasHeight;
+    }
+
+    public static int getBorderSizeLeftRight() {
+        return borderSizeLeftRight;
+    }
+
+    public static int getBorderSizeTopBottom() {
+        return borderSizeTopBottom;
+    }
+
 
 }
