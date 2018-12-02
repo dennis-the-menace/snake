@@ -35,9 +35,9 @@ public class MainThread extends Thread{
             try {
                 canvas = this.surfaceHolder.lockCanvas();
                 synchronized (surfaceHolder) {
+                    sleep(300);
                     this.gameView.update();
                     this.gameView.draw(canvas);
-                    sleep(1000);
                 }
             } catch (Exception e){
                 e.printStackTrace();
