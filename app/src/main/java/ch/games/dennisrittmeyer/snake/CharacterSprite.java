@@ -8,7 +8,11 @@ import android.support.constraint.solver.widgets.Rectangle;
 public class CharacterSprite extends MyGestureListener {
     private Paint paint = new Paint();
     private Rectangle rect;
-    private int x, y;
+    private int x;
+
+
+
+    private int y;
 
     public CharacterSprite(Rectangle rect) {
         this.rect = rect;
@@ -31,5 +35,13 @@ public class CharacterSprite extends MyGestureListener {
         } else {
             x = x - 50;
         }
+    }
+
+    public int getX() {
+        return x;
+    }
+
+    public int getY() {
+        return y;
     }
 }
