@@ -38,7 +38,7 @@ public class CharacterSprite extends MyGestureListener {
     }
 
     public void grow() {
-        
+
     }
 
     public int getX() {
