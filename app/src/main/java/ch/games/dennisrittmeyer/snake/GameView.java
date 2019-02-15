@@ -50,6 +50,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
+        /* it can take multiple tries to stop a thread, because of that a while is needed. */
         boolean retry = true;
         while(retry) {
             try {
@@ -79,8 +80,12 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             canvasWidth = canvas.getWidth() - borderSizeLeftRight;
             canvasHeight = canvas.getHeight() - borderSizeTopBottom;
             canvas.drawRect(borderSizeLeftRight, borderSizeTopBottom, canvasWidth, canvasHeight, paint);
-            if(snake.getX() == food.getX() && snake.getY() == food.getY()) {
-                System.out.println("consoleOutput: eat food");
+            // If snake and food have the same position
+            int snakePosX = snake.getRectPosList().get(0).getX();
+            int snakePosY = snake.getRectPosList().get(0).getY();
+            if(snakePosX == food.getX() && snakePosY == food.getY()) {
+                System.out.println("consoleOutput: Snake eats food");
+                snake.grow(food);
                 snake.draw(canvas, borderSizeLeftRight, borderSizeTopBottom);
                 isFoodEaten = true;
             } else {

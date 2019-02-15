@@ -15,7 +15,6 @@ public class MainThread extends Thread{
         super();
         this.surfaceHolder = surfaceHolder;
         this.gameView = gameView;
-
     }
 
     @Override
@@ -34,6 +33,7 @@ public class MainThread extends Thread{
 
             try {
                 canvas = this.surfaceHolder.lockCanvas();
+                // this locks the canvas, in order to draw on it
                 synchronized (surfaceHolder) {
                     sleep(300);
                     this.gameView.update();
