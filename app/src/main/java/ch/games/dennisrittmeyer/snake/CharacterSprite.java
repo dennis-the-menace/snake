@@ -35,16 +35,16 @@ public class CharacterSprite extends MyGestureListener {
     public void update() {
         oldPositioningList = duplicateList(rectPosList);
         if(MyGestureListener.getDirection() == Direction.down) {
-            if(checkMovementValid(Direction.up) == false) return;
+            if(!checkMovementValid(Direction.up, -50)) return;
             setSnakePositionValues(Direction.down, 50);
         } else if(MyGestureListener.getDirection() == Direction.up) {
-            if(checkMovementValid(Direction.down) == false) return;
+            if(checkMovementValid(Direction.down, 50) == false) return;
             setSnakePositionValues(Direction.up, -50);
         } else if(MyGestureListener.getDirection() == Direction.right) {
-            if(checkMovementValid(Direction.left) == false) return;
+            if(checkMovementValid(Direction.left, -50) == false) return;
             setSnakePositionValues(Direction.right, 50);
         } else {
-            if(checkMovementValid(Direction.right) == false) return;
+            if(checkMovementValid(Direction.right, 50) == false) return;
             setSnakePositionValues(Direction.left, -50);
         }
         lastDirection = MyGestureListener.getDirection();
@@ -78,10 +78,10 @@ public class CharacterSprite extends MyGestureListener {
         }
     }
 
-    private Boolean checkMovementValid(Direction invalidDirection) {
+    private Boolean checkMovementValid(Direction invalidDirection, int changeValue) {
         // this if-clause checks, that the user, cant move against his movement. (only if snake > 1)
         if(rectPosList.size() > 1 && lastDirection == invalidDirection) {
-            setSnakePositionValues(invalidDirection, -50);
+            setSnakePositionValues(invalidDirection, changeValue);
             return false;
         }
         return true;
