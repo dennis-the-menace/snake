@@ -12,6 +12,8 @@ public class CharacterSprite extends MyGestureListener {
     private Paint paint = new Paint();
     private Rectangle rect;
     private List<SnakeRectangle> rectPosList = new ArrayList<>();
+    Direction lastDirection = null;
+    List<SnakeRectangle> oldPositioningList = null;
 
     public CharacterSprite(Rectangle rect) {
         this.rect = rect;
@@ -31,49 +33,21 @@ public class CharacterSprite extends MyGestureListener {
     }
 
     public void update() {
-        List<SnakeRectangle> oldPositioningList = duplicateList(rectPosList);
-
+        oldPositioningList = duplicateList(rectPosList);
         if(MyGestureListener.getDirection() == Direction.down) {
-            int oldY = rectPosList.get(0).getY();
-            rectPosList.get(0).setY(oldY + 50);
-            int counter = 1;
-            for (SnakeRectangle rect : oldPositioningList) {
-                if(oldPositioningList.size() > counter) {
-                    rectPosList.set(counter, rect);
-                }
-                counter++;
-            }
+            if(checkMovementValid(Direction.up) == false) return;
+            setSnakePositionValues(Direction.down, 50);
         } else if(MyGestureListener.getDirection() == Direction.up) {
-            int oldY = rectPosList.get(0).getY();
-            rectPosList.get(0).setY(oldY - 50);
-            int counter = 1;
-            for (SnakeRectangle rect : oldPositioningList) {
-                if(oldPositioningList.size() > counter) {
-                    rectPosList.set(counter, rect);
-                }
-                counter++;
-            }
+            if(checkMovementValid(Direction.down) == false) return;
+            setSnakePositionValues(Direction.up, -50);
         } else if(MyGestureListener.getDirection() == Direction.right) {
-            int oldX = rectPosList.get(0).getX();
-            rectPosList.get(0).setX(oldX + 50);
-            int counter = 1;
-            for (SnakeRectangle rect : oldPositioningList) {
-                if(oldPositioningList.size() > counter) {
-                    rectPosList.set(counter, rect);
-                }
-                counter++;
-            }
+            if(checkMovementValid(Direction.left) == false) return;
+            setSnakePositionValues(Direction.right, 50);
         } else {
-            int oldX = rectPosList.get(0).getX();
-            rectPosList.get(0).setX(oldX - 50);
-            int counter = 1;
-            for (SnakeRectangle rect : oldPositioningList) {
-                if(oldPositioningList.size() > counter) {
-                    rectPosList.set(counter, rect);
-                }
-                counter++;
-            }
+            if(checkMovementValid(Direction.right) == false) return;
+            setSnakePositionValues(Direction.left, -50);
         }
+        lastDirection = MyGestureListener.getDirection();
     }
 
     public void grow(Food food) {
@@ -82,7 +56,6 @@ public class CharacterSprite extends MyGestureListener {
             if(MyGestureListener.getDirection() == Direction.right) {
                     SnakeRectangle newRect = new SnakeRectangle(lastRect.getX()-50, lastRect.getY());
                     rectPosList.add(newRect);
-
             } else if(MyGestureListener.getDirection() == Direction.left) {
                 SnakeRectangle newRect = new SnakeRectangle(lastRect.getX()+50, lastRect.getY());
                 rectPosList.add(newRect);
@@ -105,13 +78,39 @@ public class CharacterSprite extends MyGestureListener {
         }
     }
 
-    public List<SnakeRectangle> getRectPosList() {
-        return rectPosList;
+    private Boolean checkMovementValid(Direction invalidDirection) {
+        // this if-clause checks, that the user, cant move against his movement. (only if snake > 1)
+        if(rectPosList.size() > 1 && lastDirection == invalidDirection) {
+            setSnakePositionValues(invalidDirection, -50);
+            return false;
+        }
+        return true;
     }
 
-    public void setRectPosList(List<SnakeRectangle> rectPosList) {
-        this.rectPosList = rectPosList;
+    public void setSnakePositionValues(Direction direction, int changeValue) {
+        if(direction == Direction.up || direction == Direction.down) {
+            int oldY = rectPosList.get(0).getY();
+            rectPosList.get(0).setY(oldY + changeValue);
+            int counter = 1;
+            for (SnakeRectangle rect : oldPositioningList) {
+                if(oldPositioningList.size() > counter) {
+                    rectPosList.set(counter, rect);
+                }
+                counter++;
+            }
+        } else {
+            int oldX = rectPosList.get(0).getX();
+            rectPosList.get(0).setX(oldX + changeValue);
+            int counter = 1;
+            for (SnakeRectangle rect : oldPositioningList) {
+                if(oldPositioningList.size() > counter) {
+                    rectPosList.set(counter, rect);
+                }
+                counter++;
+            }
+        }
     }
+
 
     public List<SnakeRectangle> duplicateList(List<SnakeRectangle> list) {
         List<SnakeRectangle> duplicatedList = new ArrayList<>();
@@ -123,6 +122,14 @@ public class CharacterSprite extends MyGestureListener {
             duplicatedList.add(newRect);
         }
         return duplicatedList;
+    }
+
+    public List<SnakeRectangle> getRectPosList() {
+        return rectPosList;
+    }
+
+    public void setRectPosList(List<SnakeRectangle> rectPosList) {
+        this.rectPosList = rectPosList;
     }
 
 }
